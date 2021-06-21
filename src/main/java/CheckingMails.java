@@ -10,7 +10,6 @@ public class CheckingMails {
     public static void check(String host, String storeType, String user,
                              String password) {
         try {
-
             //create properties field
             Properties properties = new Properties();
 
@@ -25,20 +24,14 @@ public class CheckingMails {
             store.connect(host, user, password);
 
             //create the folder object and open it
-            Folder emailFolder = store.getFolder("INBOX");
+            Folder emailFolder = store.getFolder("inbox");
             emailFolder.open(Folder.READ_ONLY);
 
             // retrieve the messages from the folder in an array and print it
             Message[] messages = emailFolder.getMessages();
-            System.out.println("messages.length---" + messages.length);
 
-            for (int i = 0, n = messages.length; i < n; i++) {
-                Message message = messages[i];
-                System.out.println("---------------------------------");
-                System.out.println("Email Number " + (i + 1));
-                System.out.println("Subject: " + message.getSubject());
-                System.out.println("From: " + message.getFrom()[0]);
-                System.out.println("Text: " + message.getContent().toString());
+
+            for (Message message : messages) {
                 if (message.getContent() instanceof Multipart) {
                     Multipart multipart = (Multipart) message.getContent();
                     for (int j = 0; j < multipart.getCount(); j++) {
@@ -61,6 +54,7 @@ public class CheckingMails {
             emailFolder.close(false);
             store.close();
 
+            //add logging later
         } catch (NoSuchProviderException e) {
             e.printStackTrace();
         } catch (MessagingException e) {
@@ -70,14 +64,4 @@ public class CheckingMails {
         }
     }
 
-    public static void main(String[] args) {
-
-        String host = "pop.mail.ru";// change accordingly
-        String mailStoreType = "pop3";
-        String username = "";// change accordingly
-        String password = "";// change accordingly
-
-        check(host, mailStoreType, username, password);
-
-    }
 }
